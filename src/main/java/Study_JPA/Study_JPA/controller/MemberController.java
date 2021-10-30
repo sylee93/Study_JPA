@@ -1,10 +1,16 @@
 package Study_JPA.Study_JPA.controller;
 
+import Study_JPA.Study_JPA.domain.Address;
+import Study_JPA.Study_JPA.domain.Member;
 import Study_JPA.Study_JPA.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
@@ -12,9 +18,28 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/member/new")
+    @GetMapping("/members/new")
     public String createForm(Model model){
         model.addAttribute("memberForm", new MemberForm());
-        return "members/creteMemberForm";
+        return "members/createMemberForm";
+    }
+
+    @PostMapping("/members/new")
+    public String create(@Valid MemberForm form, BindingResult result){
+        // @Valid : 어노테이션으로 지정해준 벨리데이션을 사용
+        // BindingReuslt : 실행결과를 전달해줌 (에러내용 제공)
+
+        if(result.hasErrors()){
+            return "members/createMEmberForm";
+        }
+
+        Address address = new Address(form.getCity(), form.getStreet(), form.getZipcode());
+
+        Member member =new Member();
+        member.setName(form.getName());
+        member.setAddress(address);
+
+        memberService.join(member);
+        return "redirect:/";
     }
 }
