@@ -1,5 +1,6 @@
 package Study_JPA.Study_JPA.service;
 
+import Study_JPA.Study_JPA.domain.item.Book;
 import Study_JPA.Study_JPA.domain.item.Item;
 import Study_JPA.Study_JPA.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,19 @@ public class ItemService {
     @Transactional
     public void saveItem(Item item){
         itemRepository.save(item);
+    }
+
+    /**
+     * 변경감지기능 사용 예시
+     * @param itemId
+     */
+    @Transactional
+    public void updateItem(Long itemId, int price, String name, int stockQuantity){
+        Item findItem = itemRepository.findOne(itemId);// 영속상태 item을 찾아옴
+        findItem.setPrice(price);
+        findItem.setName(name);
+        findItem.setStockQuantity(stockQuantity);
+        // item객체의 값들이 변경이 일어난 후 Transactional어노테이션에 의해 commit 되고 이때 flush 하면서 변경감지된 값들을 update
     }
 
     public List<Item> findItems(){
