@@ -7,7 +7,7 @@ Spring:
 
   jpa:
     hibernate:
-      ddl-auto: none # none : 테이블을 드랍하지 않음
+      ddl-auto: create # none : 테이블을 드랍하지 않음
     properties:
       hibernate:
 #        show_sql: true
