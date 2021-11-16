@@ -1,6 +1,7 @@
 package Study_JPA.Study_JPA.domain;
 
 import Study_JPA.Study_JPA.domain.item.Item;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
