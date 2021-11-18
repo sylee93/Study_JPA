@@ -40,13 +40,30 @@ public class OrderSimpleApiController {
         return  all;
     }
 
+    /**
+     * dto로 변환
+     *  - n+1 문제 발생
+     * @return
+     */
     @GetMapping("/api/v2/simple-orders")
     public List<SimpleOrderDto> ordersV2(){
+        // ORDER 2개
+        // N+1 -> 1+ 회원 N + 배송 N
         List<Order> orders = orderRepository.findAllByString(new OrderSearch());
 
         List<SimpleOrderDto> result = orders.stream()
                 .map(o -> new SimpleOrderDto(o))
                 .collect(Collectors.toList());
+        return result;
+    }
+
+    @GetMapping("/api/v3/simple-orders")
+    public List<SimpleOrderDto> orderV3(){
+        List<Order> orders = orderRepository.findAllWithMemberDelivery();
+        List<SimpleOrderDto> result = orders.stream()
+                .map(o -> new SimpleOrderDto(o))
+                .collect(Collectors.toList());
+
         return result;
     }
 

@@ -103,4 +103,14 @@ public class OrderRepository {
         TypedQuery<Order> query = em.createQuery(cq).setMaxResults(1000);
         return query.getResultList();
     }
+
+    //== 패치조인 : jpql에서 성능 최적화를 위해 사용, 연관된 엔티티나 컬렉션을 SQL 한번에 함꼐 조회 가능
+    //            jpql은 반환할때 연관관계를 고려하지 않지만 패치조인을 사용할때만 연관된 엔티티도 함께 조회(즉시로딩)
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery(
+                "select o from Order o"+
+                        " join fetch o.member m"+
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+    }
 }
