@@ -6,12 +6,13 @@ import Study_JPA.Study_JPA.domain.Order;
 import Study_JPA.Study_JPA.domain.OrderStatus;
 import Study_JPA.Study_JPA.repository.OrderRepository;
 import Study_JPA.Study_JPA.repository.OrderSearch;
+import Study_JPA.Study_JPA.repository.order.simplequery.OrderSimpleQueryDto;
+import Study_JPA.Study_JPA.repository.order.simplequery.OrderSimpleQueryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 public class OrderSimpleApiController {
 
     private final OrderRepository orderRepository;
+    private final OrderSimpleQueryRepository orderSimpleQueryRepository;
 
     @GetMapping("/api/v1/simple-orders")
     public List<Order> ordersV1(){
@@ -57,6 +59,11 @@ public class OrderSimpleApiController {
         return result;
     }
 
+    /**
+     * 엔티티 단위로 조회하여 전체 칼럼을 조회
+     *   - 재사용성은 높으나 v4 보다 성능이 낮음
+     * @return
+     */
     @GetMapping("/api/v3/simple-orders")
     public List<SimpleOrderDto> orderV3(){
         List<Order> orders = orderRepository.findAllWithMemberDelivery();
@@ -65,6 +72,16 @@ public class OrderSimpleApiController {
                 .collect(Collectors.toList());
 
         return result;
+    }
+
+    /**
+     * sql 사용할때 처럼 원하는 컬럼만 조회가능
+     *   - 재사용성이 낮으나 v3 보다 성능은 높일 수 있음
+     * @return
+     */
+    @GetMapping("/api/v4/simple-orders")
+    public List<OrderSimpleQueryDto> orderV4(){
+        return orderSimpleQueryRepository.findOrderDtos();
     }
 
     @Data
