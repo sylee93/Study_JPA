@@ -1,7 +1,6 @@
 package Study_JPA.Study_JPA.repository;
 
 import Study_JPA.Study_JPA.domain.Order;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -12,10 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
 public class OrderRepository {
 
     private final EntityManager em;
+
+    public OrderRepository(EntityManager em) {
+        this.em = em;
+    }
 
     public void save(Order order){
         em.persist(order);
@@ -25,14 +27,8 @@ public class OrderRepository {
         return em.find(Order.class, id);
     }
 
-    public List<Order> findAll(OrderSearch orderSearch){
-
-        return em.createQuery("select o from Order o join o.member m "
-                        + "where o.status = :status "
-                        + "and m.name like :name", Order.class)
-                .setParameter("status", orderSearch.getOrderStatus())
-                .setParameter("name", orderSearch.getMemberName())
-                .setMaxResults(1000)
+    public List<Order> findAll() {
+        return em.createQuery("select o from Order o", Order.class)
                 .getResultList();
     }
 
@@ -104,6 +100,7 @@ public class OrderRepository {
         return query.getResultList();
     }
 
+
     //== 패치조인 : jpql에서 성능 최적화를 위해 사용, 연관된 엔티티나 컬렉션을 SQL 한번에 함꼐 조회 가능
     //            jpql은 반환할때 연관관계를 고려하지 않지만 패치조인을 사용할때만 연관된 엔티티도 함께 조회(즉시로딩)
     public List<Order> findAllWithMemberDelivery() {
@@ -112,6 +109,25 @@ public class OrderRepository {
                         " join fetch o.member m"+
                         " join fetch o.delivery d", Order.class
         ).getResultList();
+    }
+
+    public List<Order> findAllWithItem() {
+        return em.createQuery(
+                        "select distinct o from Order o" +
+                                " join fetch o.member m" +
+                                " join fetch o.delivery d" +
+                                " join fetch o.orderItems oi" +
+                                " join fetch oi.item i", Order.class)
+                .getResultList();
+    }
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery(
+                        "select o from Order o" +
+                                " join fetch o.member m" +
+                                " join fetch o.delivery d", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
 }

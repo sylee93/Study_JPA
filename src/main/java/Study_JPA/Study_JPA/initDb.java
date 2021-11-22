@@ -89,7 +89,7 @@ public class initDb {
         private Order createDelivery(Member member, OrderItem orderItem1, OrderItem orderItem2) {
             Delivery delivery = new Delivery();
             delivery.setAddress(member.getAddress());
-            return Order.createorder(member, delivery, orderItem1, orderItem2);
+            return Order.createOrder(member, delivery, orderItem1, orderItem2);
         }
     }
 

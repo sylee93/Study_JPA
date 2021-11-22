@@ -26,7 +26,7 @@ public class ItemService {
      * @param itemId
      */
     @Transactional
-    public void updateItem(Long itemId, int price, String name, int stockQuantity){
+    public void updateItem(Long itemId, String name, int price, int stockQuantity){
         Item findItem = itemRepository.findOne(itemId);// 영속상태 item을 찾아옴
         findItem.setPrice(price);
         findItem.setName(name);
