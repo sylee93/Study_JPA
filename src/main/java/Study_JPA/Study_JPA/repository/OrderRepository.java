@@ -111,6 +111,8 @@ public class OrderRepository {
         ).getResultList();
     }
 
+    // 1(order) 대 다(orderItem) 패치조인에서 페이징처리(.setFristResult / .setMaxResult) 불가능
+    // 모든 데이터를 메모리에 올리고 정렬 하기때문에 out of memory 발생 (매우 위험)
     public List<Order> findAllWithItem() {
         return em.createQuery(
                         "select distinct o from Order o" +
