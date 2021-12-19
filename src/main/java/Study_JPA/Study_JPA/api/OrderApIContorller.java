@@ -6,6 +6,8 @@ import Study_JPA.Study_JPA.domain.OrderItem;
 import Study_JPA.Study_JPA.domain.OrderStatus;
 import Study_JPA.Study_JPA.repository.OrderRepository;
 import Study_JPA.Study_JPA.repository.OrderSearch;
+import Study_JPA.Study_JPA.repository.order.query.OrderQueryDto;
+import Study_JPA.Study_JPA.repository.order.query.OrderQueryRepository;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 public class OrderApIContorller {
 
     private final OrderRepository orderRepository;
+    private final OrderQueryRepository orderQueryRepositor;
 
     @GetMapping("/api/v1/orders")
     public List<Order> ordersV1(){
@@ -73,6 +76,10 @@ public class OrderApIContorller {
         return result;
     }
 
+    @GetMapping("/api/v4/orders")
+    public List<OrderQueryDto> ordersV4(){
+        return orderQueryRepositor.findOrderQueryDtos();
+    }
 
     @Data
     static class OrderDto {
