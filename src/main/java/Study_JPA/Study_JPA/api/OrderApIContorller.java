@@ -81,6 +81,11 @@ public class OrderApIContorller {
         return orderQueryRepositor.findOrderQueryDtos();
     }
 
+    @GetMapping("/api/v5/orders")
+    public List<OrderQueryDto> ordersV5(){
+        return orderQueryRepositor.findAllByDto_optiomization();
+    }
+
     @Data
     static class OrderDto {
         private Long orderId;
